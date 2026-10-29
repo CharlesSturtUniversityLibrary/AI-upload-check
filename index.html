@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can I upload this to an AI tool? | CSU Library</title>
+<style>
+  :root{
+    --orange:#F0572A;
+    --orange-tint:#fbe2da;
+    --charcoal:#222222;
+    --navy:#222944;
+    --navy-tint:#dadce6;
+    --green:#3C8364;
+    --green-tint:#dcebe4;
+    --lightbrown:#C7B8A0;
+    --white:#FFFFFF;
+    --border:#e3e0da;
+    --maxw:680px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:Arial,Helvetica,system-ui,sans-serif;
+    color:var(--charcoal);
+    background:var(--white);
+    line-height:1.5;
+  }
+
+  /* Skip link */
+  .skip-link{
+    position:absolute;
+    top:-48px;
+    left:0;
+    background:var(--navy);
+    color:var(--white);
+    padding:10px 18px;
+    text-decoration:none;
+    font-size:15px;
+    font-weight:bold;
+    z-index:200;
+    border-radius:0 0 8px 0;
+    transition:top .15s ease;
+  }
+  .skip-link:focus{top:0;}
+
+  /* Visually hidden but available to screen readers */
+  .sr-only{
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0;
+  }
+
+  header.band{
+    background:var(--orange);
+    color:var(--white);
+    padding:22px 20px 26px;
+    text-align:center;
+  }
+  header.band h1{
+    margin:0;
+    font-size:clamp(22px,5vw,28px);
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .band-sub{
+    text-align:center;
+    font-size:14px;
+    color:#595959;
+    margin:0;
+    padding:10px 20px 0;
+    background:var(--white);
+  }
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 18px 60px;
+  }
+  .card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:28px 24px;
+    margin-top:18px;
+    box-shadow:0 6px 22px rgba(34,34,34,0.07);
+  }
+  .crumbs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:16px;
+    min-height:24px;
+  }
+  .crumb{
+    font-size:12px;
+    background:var(--orange-tint);
+    color:var(--charcoal);
+    border-radius:20px;
+    padding:4px 10px;
+  }
+  .step-label{
+    font-size:12px;
+    color:#595959;
+    margin:0 0 10px;
+    font-weight:bold;
+  }
+  .question-heading{
+    font-size:20px;
+    font-weight:700;
+    margin:0 0 8px;
+    color:var(--charcoal);
+  }
+  .question-heading:focus{
+    outline:none;
+  }
+  .q-note{
+    font-size:14px;
+    color:#595959;
+    background:#f7f5f1;
+    border-left:3px solid var(--lightbrown);
+    border-radius:4px;
+    padding:10px 14px;
+    margin:0 0 18px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .opt-btn{
+    text-align:left;
+    font-size:16px;
+    font-family:inherit;
+    padding:14px 16px;
+    border:1.5px solid var(--border);
+    background:var(--white);
+    color:var(--charcoal);
+    border-radius:10px;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .opt-btn:hover{
+    border-color:var(--orange);
+    background:var(--orange-tint);
+  }
+  .opt-btn:focus-visible{
+    outline:3px solid var(--navy);
+    outline-offset:2px;
+  }
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:22px;
+  }
+  .back-link{
+    font-size:14px;
+    color:var(--navy);
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:6px 0;
+    text-decoration:underline;
+    font-family:inherit;
+  }
+  .back-link:disabled{visibility:hidden;}
+  .back-link:focus-visible{
+    outline:3px solid var(--navy);
+    outline-offset:3px;
+    border-radius:3px;
+  }
+  .restart-link{
+    font-size:14px;
+    color:#595959;
+    background:none;
+    border:none;
+    cursor:pointer;
+    text-decoration:underline;
+    font-family:inherit;
+  }
+  .restart-link:focus-visible{
+    outline:3px solid var(--navy);
+    outline-offset:3px;
+    border-radius:3px;
+  }
+  .tag{
+    display:inline-block;
+    font-size:13px;
+    font-weight:bold;
+    padding:5px 12px;
+    border-radius:20px;
+    margin-bottom:14px;
+  }
+  .tag.good{background:var(--green-tint);color:#1f5740;}
+  .tag.caution{background:var(--orange-tint);color:#8a3a1f;}
+  .tag.stop{background:var(--navy-tint);color:var(--navy);}
+  .result-heading{
+    font-size:22px;
+    font-weight:700;
+    margin:0 0 12px;
+  }
+  .result-heading:focus{
+    outline:none;
+  }
+  .result-body{
+    font-size:16px;
+    margin:0 0 16px;
+  }
+  .tip-box{
+    background:#f7f5f1;
+    border-left:4px solid var(--lightbrown);
+    border-radius:6px;
+    padding:14px 16px;
+    font-size:15px;
+    margin-bottom:22px;
+  }
+  .tip-box strong{display:block;font-size:13px;color:#595959;margin-bottom:4px;}
+  .tip-box a{color:var(--navy);}
+  .result-actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    font-family:inherit;
+    font-size:15px;
+    padding:11px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-block;
+    border:1.5px solid transparent;
+  }
+  .btn:focus-visible{
+    outline:3px solid var(--navy);
+    outline-offset:3px;
+  }
+  .btn-primary{
+    background:var(--navy);
+    color:var(--white);
+    border-color:var(--navy);
+  }
+  .btn-secondary{
+    background:var(--white);
+    color:var(--navy);
+    border-color:var(--navy);
+  }
+  .ref-section{
+    max-width:var(--maxw);
+    margin:36px auto 0;
+    padding:0 18px;
+  }
+  .ref-section h2{font-size:18px;margin-bottom:6px;}
+  .ref-section > p{font-size:14px;color:#595959;margin-top:0;margin-bottom:14px;}
+  details{
+    border:1px solid var(--border);
+    border-radius:8px;
+    margin-bottom:8px;
+    padding:0 14px;
+  }
+  details summary{
+    padding:12px 0;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:15px;
+  }
+  details summary:focus-visible{
+    outline:3px solid var(--navy);
+    outline-offset:2px;
+    border-radius:4px;
+  }
+  details .ref-body{
+    padding:0 0 14px;
+    font-size:14px;
+    color:#333;
+  }
+  .pill{
+    display:inline-block;
+    font-size:12px;
+    font-weight:bold;
+    padding:2px 8px;
+    border-radius:12px;
+    margin-right:6px;
+  }
+  .pill.restricted{background:var(--navy-tint);color:var(--navy);}
+  .pill.sublicence{background:var(--orange-tint);color:#8a3a1f;}
+  .pill.confirm{background:var(--green-tint);color:#1f5740;}
+  footer{
+    max-width:var(--maxw);
+    margin:30px auto 0;
+    padding:18px 18px 40px;
+    font-size:13px;
+    color:#595959;
+    border-top:1px solid var(--border);
+  }
+  footer a{color:var(--navy);}
+  footer p{margin:0 0 6px;}
+  @media (prefers-reduced-motion: no-preference){
+    .fade-in{animation:fadeIn .25s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+  }
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<header class="band">
+  <h1>Can I upload this to an AI tool?</h1>
+</header>
+<p class="band-sub">Charles Sturt University Library | a quick copyright check before you upload</p>
+
+<main id="main-content">
+  <div class="wrap">
+    <div class="card" id="card"></div>
+  </div>
+
+  <div class="ref-section">
+    <h2>Quick reference: common AI tool terms</h2>
+    <p>Whether you can upload content also depends on what licence you are agreeing to give the AI platform. Check the tool's current terms - they change regularly.</p>
+
+    <details>
+      <summary>Microsoft Copilot - Enterprise (CSU staff/student login)</summary>
+      <div class="ref-body"><span class="pill confirm">Confirms rights only</span>Does not require you to sublicence uploads and is not used to train the model. Files are stored for 30 days then deleted.</div>
+    </details>
+    <details>
+      <summary>Microsoft Copilot - Free/consumer version</summary>
+      <div class="ref-body"><span class="pill sublicence">Sublicence required</span>You grant Microsoft a licence to your content, including the right to pass it on to suppliers.</div>
+    </details>
+    <details>
+      <summary>ChatGPT (OpenAI)</summary>
+      <div class="ref-body"><span class="pill confirm">Confirms rights only</span>You keep ownership of what you upload, but confirm you have the rights to it. Your content may be used to improve the service unless you opt out in settings.</div>
+    </details>
+    <details>
+      <summary>Claude (Anthropic)</summary>
+      <div class="ref-body"><span class="pill confirm">Confirms rights only</span>You keep your rights to inputs. Content may be used for training unless you opt out in account settings.</div>
+    </details>
+    <details>
+      <summary>Google Gemini</summary>
+      <div class="ref-body"><span class="pill sublicence">Sublicence required</span>You licence Google to use uploaded content to provide and improve its services. Training is on by default but can be switched off in Gemini Apps Activity settings.</div>
+    </details>
+    <details>
+      <summary>Google NotebookLM</summary>
+      <div class="ref-body"><span class="pill sublicence">Sublicence required</span>Covered by Google's general Terms of Service - you licence Google to use content to provide and develop the service.</div>
+    </details>
+    <details>
+      <summary>Perplexity AI</summary>
+      <div class="ref-body"><span class="pill sublicence">Sublicence required</span>You grant Perplexity a licence to use your content, including to publish output based on it.</div>
+    </details>
+
+    <p style="margin-top:14px;">For the full picture, including outputs and AI-generated content, see the <a href="https://libguides.csu.edu.au/generativeAI/Copyright" target="_blank" rel="noopener">CSU Library Generative AI guide: Copyright<span class="sr-only"> (opens in new tab)</span></a>.</p>
+  </div>
+</main>
+
+<footer>
+  <p>This tool is a quick-reference guide based on CSU Library's Generative AI guide. It does not cover every situation and is not legal advice. Terms of use and licence agreements change, so always check the current source.</p>
+  <p>Questions? <a href="https://library.csu.edu.au/our-libraries/contact-library-team" target="_blank" rel="noopener">Contact the Library<span class="sr-only"> (opens in new tab)</span></a> | Full guide: <a href="https://libguides.csu.edu.au/generativeAI/Copyright" target="_blank" rel="noopener">libguides.csu.edu.au/generativeAI/Copyright<span class="sr-only"> (opens in new tab)</span></a></p>
+  <p>Charles Sturt University | TEQSA Provider Identification: PRV12018 (Australian University). CRICOS Provider: 00005F.</p>
+</footer>
+
+<script>
+(function(){
+
+  var TREE = {
+    start: {
+      question: "What do you want to upload into an AI tool?",
+      note: "Uploading a file means making a copy, so copyright applies. Two questions matter: (A) what licence are you agreeing to give the AI platform, and (B) do you have the right to give that licence? This tool is a guide to answering B. For question A, see the quick reference below.",
+      options: [
+        {label:"A journal article or ebook chapter", next:"q2"},
+        {label:"A report or document (government, not-for-profit or corporate)", next:"q4a"},
+        {label:"A draft of your own work or notes", next:"q5"},
+        {label:"A draft of course content", next:"RESULT_A6"},
+        {label:"A draft of someone else's work (e.g. a manuscript for peer review, or a student assignment)", next:"RESULT_A7"},
+        {label:"A course reading", next:"q6"},
+        {label:"University course or lecture material", next:"RESULT_A9"},
+        {label:"An image, graph, audio, audiovisual or other multimedia file", next:"q8"},
+        {label:"A dataset (e.g. an Excel file, table or database extract)", next:"q10"}
+      ]
+    },
+    q2: {
+      question: "Is the article or book chapter free to read online without a paywall, subscription or login?",
+      options: [
+        {label:"No - I can only access it when logged in to my CSU account or a personal subscription", next:"RESULT_A1"},
+        {label:"Yes - the link to read it works from anywhere", next:"q3"}
+      ]
+    },
+    q3: {
+      question: "The article or chapter is free to read without a login or paywall. What are its copyright or licence conditions?",
+      options: [
+        {label:"It has a Creative Commons (CC BY) or other open access licence", next:"RESULT_A4"},
+        {label:"It says 'all rights reserved' or similar", next:"RESULT_A2"},
+        {label:"There is no copyright mark, open access licence or indication of usage rights", next:"RESULT_A2"},
+        {label:"Copyright has expired - it is more than 70 years since the author died and the work is in the public domain", next:"RESULT_A3"}
+      ]
+    },
+    q4a: {
+      question: "Is the report or document free to read online without a paywall, subscription or login?",
+      options: [
+        {label:"No - I can only access it when logged in to my CSU account", next:"RESULT_A1"},
+        {label:"No - I can only access it through a personal subscription", next:"RESULT_A10"},
+        {label:"Yes - the link to read it works from anywhere", next:"q4"}
+      ]
+    },
+    q4: {
+      question: "The document or report is free to read online. What are its copyright or licence conditions?",
+      options: [
+        {label:"It has a Creative Commons (CC BY) or other open access licence", next:"RESULT_A4"},
+        {label:"It says 'all rights reserved' or similar", next:"RESULT_A2"},
+        {label:"There is no copyright mark, open access licence or indication of usage rights", next:"RESULT_A2"},
+        {label:"Copyright has expired - it is more than 70 years since the author died and the work is in the public domain", next:"RESULT_A3"}
+      ]
+    },
+    q5: {
+      question: "Who owns the copyright in this work?",
+      options: [
+        {label:"I am a student and it is my own work", next:"RESULT_A5"},
+        {label:"I am a staff member and also a student, and the work is part of my studies or HDR research", next:"RESULT_A5"},
+        {label:"I am a staff member and the material is for teaching or other university purposes", next:"RESULT_A6"}
+      ]
+    },
+    q6: {
+      question: "Is the course reading free to read online without a paywall, subscription or login?",
+      note: "To check: search for the reading in another browser using Google and see if you can access it without your CSU login.",
+      options: [
+        {label:"No - I can only access it when logged in to my CSU account", next:"q7"},
+        {label:"Yes - I can find and read it without my CSU login", next:"q3"}
+      ]
+    },
+    q7: {
+      question: "You must be logged in to your CSU account to access this reading. What type of reading is it?",
+      options: [
+        {label:"It is from a library database, journal or ebook", next:"RESULT_A1"},
+        {label:"It is a scan from a hardcopy book or journal", next:"RESULT_A8"},
+        {label:"It has a copyright statement that mentions section 113P of the Copyright Act", next:"RESULT_A8"}
+      ]
+    },
+    q8: {
+      question: "Is the image, audio or audiovisual material free to access online without a paywall, subscription or login?",
+      options: [
+        {label:"No - I can only access it when logged in to my CSU account", next:"RESULT_A1"},
+        {label:"No - I can only access it when logged into a personal subscription (free or paid)", next:"RESULT_A10"},
+        {label:"Yes - the link works from anywhere and I do not need to log in", next:"q9"}
+      ]
+    },
+    q9: {
+      question: "The image, audio or audiovisual material is free to access without a login or paywall. What are its copyright or licence conditions?",
+      options: [
+        {label:"It has a Creative Commons (CC BY) or other open access licence", next:"RESULT_A4"},
+        {label:"It says 'all rights reserved' or similar", next:"RESULT_A2"},
+        {label:"There is no copyright mark, open access licence or indication of usage rights", next:"RESULT_A2"},
+        {label:"Copyright has expired - it is more than 70 years since the author died and the work is in the public domain", next:"RESULT_A3"}
+      ]
+    },
+    q10: {
+      question: "Does the dataset contain confidential, private or sensitive data?",
+      note: "Note: facts and raw data are not protected by copyright, however the compilation and arrangement may be protected.",
+      options: [
+        {label:"Yes", next:"RESULT_A11"},
+        {label:"No - it is from a published source", next:"q11"},
+        {label:"No - it is my own research data, and there is no sensitive, private or confidential information in it", next:"RESULT_A5"},
+        {label:"No - it is university data, and there is no sensitive, private or confidential information in it", next:"RESULT_A6"}
+      ]
+    },
+    q11: {
+      question: "Is the dataset free to access online without a paywall, subscription or login?",
+      options: [
+        {label:"No - I can only access it when logged into an account", next:"RESULT_A12"},
+        {label:"Yes - I can access it from anywhere without a login", next:"RESULT_A13"}
+      ]
+    }
+  };
+
+  var RESULTS = {
+    RESULT_A1: {
+      verdict:"stop",
+      heading:"In most cases: do not upload",
+      body:"Usage is subject to the publisher platform terms. In most cases uploading content to an external AI system is not permitted. Some databases include their own AI tools which you can use with the database content.",
+      tip:"If in doubt, terms of use can be checked through PRIMO search or the A-Z databases list. You may also be able to find an open access Author Accepted Manuscript if the author has self-archived it in an Institutional Repository (Green Open Access)."
+    },
+    RESULT_A2: {
+      verdict:"caution",
+      heading:"Paste a link instead of uploading",
+      body:"The work is 'all rights reserved' or has no clear usage rights indicated. Copyright is automatic, so if no licence is shown, the default is 'all rights reserved'.",
+      tip:"Do not upload if the AI platform requires you to agree to a sublicence for training or development. Paste a link to the article instead of uploading it, but only use the outputs for research and study."
+    },
+    RESULT_A3: {
+      verdict:"good",
+      heading:"You are free to use it",
+      body:"Copyright has expired and the work is in the public domain.",
+      tip:"No copyright restrictions apply. Note the source in case you need to reference it later."
+    },
+    RESULT_A4: {
+      verdict:"caution",
+      heading:"Paste a link instead of uploading",
+      body:"The work has a Creative Commons (CC) licence. Do not upload if the AI platform requires you to agree to a sublicence for platform training or development. Paste a link to the article instead of uploading it.",
+      tip:"Follow the CC licence terms: make sure you attribute the author if you share derivatives, following Creative Commons attribution TASL (Title, Author, Source, Licence) guidelines. Do not share derivatives if the licence has a NoDerivatives element (CC BY-ND or CC BY-NC-ND)."
+    },
+    RESULT_A5: {
+      verdict:"good",
+      heading:"You are free to upload it",
+      body:"As the author or creator of the work, you own the copyright and are free to upload it.",
+      tip:"Be mindful of your own privacy and intellectual property."
+    },
+    RESULT_A6: {
+      verdict:"caution",
+      heading:"The university owns the copyright",
+      body:"You may be the author, but the university owns the copyright in teaching material created by staff.",
+      tip:'You may upload original teaching material into an AI tool, on condition the material does not include ICIP; unpublished research; personal or confidential information; or content from library subscriptions or other copyright material that is not your own work. If you are updating existing or inherited course material, make sure there is no third-party content. Follow the <a href="https://secureframework.ai/" target="_blank" rel="noopener">SECURE framework<span class="sr-only"> (opens in new tab)</span></a> when dealing with university IP.'
+    },
+    RESULT_A7: {
+      verdict:"stop",
+      heading:"Do not upload without permission",
+      body:"If you do not own the copyright you need permission to reuse the work.",
+      tip:'Using a closed AI system such as Enterprise Copilot may be acceptable. Follow the <a href="https://secureframework.ai/" target="_blank" rel="noopener">SECURE framework<span class="sr-only"> (opens in new tab)</span></a>. Never upload someone else\'s material without permission if the AI tool\'s terms of use require you to sublicence the content or allow it to be used for training or development.'
+    },
+    RESULT_A8: {
+      verdict:"caution",
+      heading:"Closed university systems only",
+      body:"This reading is provided under the copyright statutory education licence.",
+      tip:"You can upload it to a closed, university-licenced AI system such as Enterprise Copilot. Do not upload if an AI platform requires you to agree to a sublicence for training or development."
+    },
+    RESULT_A9: {
+      verdict:"caution",
+      heading:"Ask first, or follow the SECURE framework",
+      body:"The university owns the copyright in teaching material and course content (excluding any third-party content).",
+      tip:'Students: ask your lecturer or course co-ordinator before uploading it into an AI tool. Staff: you may upload or authorise students to upload Charles Sturt teaching material into an AI tool, on condition the material does not include ICIP; unpublished research; personal or confidential information; or content from library subscriptions or other copyright material that is not your own work. Follow the <a href="https://secureframework.ai/" target="_blank" rel="noopener">SECURE framework<span class="sr-only"> (opens in new tab)</span></a> when dealing with university IP. Pasting a link to material that is already available on the Charles Sturt website without a login is generally ok.'
+    },
+    RESULT_A10: {
+      verdict:"caution",
+      heading:"Check the platform's terms of use",
+      body:"You will need to check the terms and conditions of use of the platform.",
+      tip:"Links to terms, usage rights or licences are sometimes in footers or about pages. Terms may be under headings such as Content Use, Copyright or Intellectual Property."
+    },
+    RESULT_A11: {
+      verdict:"stop",
+      heading:"Do not upload",
+      body:"Do not upload private, confidential or sensitive information or data.",
+      tip:'Follow ethics guidelines and protocols and the <a href="https://secureframework.ai/" target="_blank" rel="noopener">SECURE framework<span class="sr-only"> (opens in new tab)</span></a>.'
+    },
+    RESULT_A12: {
+      verdict:"caution",
+      heading:"Check the account's terms of use",
+      body:"You will need to check the terms and conditions of use of the account where you obtained the data.",
+      tip:"Links to terms, usage rights or licences are sometimes in footers or about pages."
+    },
+    RESULT_A13: {
+      verdict:"caution",
+      heading:"Paste a link instead of uploading",
+      body:"The dataset is freely accessible online.",
+      tip:"Paste a link to the data instead of uploading it. If uploading is essential, usage will depend on whether the data is protected by copyright. If it is protected by copyright, check whether there are terms of use or a Creative Commons or other open access licence. Contact the library if you need help."
+    }
+  };
+
+  var TAG_LABEL = {good:"Can upload", caution:"Check before uploading", stop:"Do not upload"};
+
+  var path = [];
+  var current = "start";
+  var card = document.getElementById("card");
+
+  function render(){
+    card.innerHTML = "";
+    card.classList.remove("fade-in");
+    void card.offsetWidth;
+    card.classList.add("fade-in");
+
+    // Breadcrumb navigation
+    var crumbNav = document.createElement("nav");
+    crumbNav.setAttribute("aria-label", "Your choices so far");
+    if (path.length === 0) {
+      crumbNav.setAttribute("aria-hidden", "true");
+    }
+    var crumbs = document.createElement("div");
+    crumbs.className = "crumbs";
+    path.forEach(function(p){
+      var c = document.createElement("span");
+      c.className = "crumb";
+      c.textContent = p.choiceLabel;
+      crumbs.appendChild(c);
+    });
+    crumbNav.appendChild(crumbs);
+    card.appendChild(crumbNav);
+
+    if (current.indexOf("RESULT_") === 0){
+      renderResult(current);
+    } else {
+      renderQuestion(current);
+    }
+
+    // Move focus to the new heading so screen readers announce the new content
+    var heading = card.querySelector("[data-heading]");
+    if (heading) { heading.focus(); }
+  }
+
+  function renderQuestion(key){
+    var node = TREE[key];
+
+    var stepLabel = document.createElement("p");
+    stepLabel.className = "step-label";
+    stepLabel.textContent = "Step " + (path.length + 1);
+    // Hide step counter from screen readers - it will be read as part of the heading context
+    stepLabel.setAttribute("aria-hidden", "true");
+    card.appendChild(stepLabel);
+
+    var q = document.createElement("h2");
+    q.className = "question-heading";
+    q.id = "question";
+    q.textContent = "Step " + (path.length + 1) + ": " + node.question;
+    q.setAttribute("tabindex", "-1");
+    q.setAttribute("data-heading", "true");
+    card.appendChild(q);
+
+    if (node.note){
+      var noteEl = document.createElement("div");
+      noteEl.className = "q-note";
+      noteEl.setAttribute("role", "note");
+      noteEl.textContent = node.note;
+      card.appendChild(noteEl);
+    }
+
+    var opts = document.createElement("div");
+    opts.className = "options";
+    opts.setAttribute("role", "group");
+    opts.setAttribute("aria-labelledby", "question");
+    node.options.forEach(function(opt){
+      var b = document.createElement("button");
+      b.className = "opt-btn";
+      b.textContent = opt.label;
+      b.addEventListener("click", function(){
+        path.push({nodeKey:key, choiceLabel:opt.label});
+        current = opt.next;
+        render();
+      });
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+
+    var navRow = document.createElement("div");
+    navRow.className = "nav-row";
+
+    var back = document.createElement("button");
+    back.className = "back-link";
+    back.textContent = "\u2190 Back";
+    back.setAttribute("aria-label", path.length > 0 ? "Go back to previous question" : "Go back (unavailable, this is the first step)");
+    back.disabled = path.length === 0;
+    back.addEventListener("click", goBack);
+    navRow.appendChild(back);
+
+    if (path.length > 0){
+      var restart = document.createElement("button");
+      restart.className = "restart-link";
+      restart.textContent = "Start over";
+      restart.setAttribute("aria-label", "Start over from the beginning");
+      restart.addEventListener("click", goRestart);
+      navRow.appendChild(restart);
+    }
+
+    card.appendChild(navRow);
+  }
+
+  function renderResult(key){
+    var r = RESULTS[key];
+
+    var tag = document.createElement("span");
+    tag.className = "tag " + r.verdict;
+    tag.textContent = TAG_LABEL[r.verdict];
+    card.appendChild(tag);
+
+    var h = document.createElement("h2");
+    h.className = "result-heading";
+    h.id = "resultHeading";
+    h.textContent = r.heading;
+    h.setAttribute("tabindex", "-1");
+    h.setAttribute("data-heading", "true");
+    card.appendChild(h);
+
+    var body = document.createElement("p");
+    body.className = "result-body";
+    body.textContent = r.body;
+    card.appendChild(body);
+
+    var tipBox = document.createElement("div");
+    tipBox.className = "tip-box";
+    var tipLabel = document.createElement("strong");
+    tipLabel.textContent = "What to do";
+    tipBox.appendChild(tipLabel);
+    var tipText = document.createElement("span");
+    tipText.innerHTML = r.tip;
+    tipBox.appendChild(tipText);
+    card.appendChild(tipBox);
+
+    var actions = document.createElement("div");
+    actions.className = "result-actions";
+
+    var restart = document.createElement("button");
+    restart.className = "btn btn-primary";
+    restart.textContent = "Check another item";
+    restart.setAttribute("aria-label", "Check another item - start the tool again from the beginning");
+    restart.addEventListener("click", goRestart);
+    actions.appendChild(restart);
+
+    var guide = document.createElement("a");
+    guide.className = "btn btn-secondary";
+    guide.href = "https://libguides.csu.edu.au/generativeAI/Copyright";
+    guide.target = "_blank";
+    guide.rel = "noopener";
+    guide.textContent = "Read the full guide";
+    var guideNote = document.createElement("span");
+    guideNote.className = "sr-only";
+    guideNote.textContent = " (opens in new tab)";
+    guide.appendChild(guideNote);
+    actions.appendChild(guide);
+
+    card.appendChild(actions);
+
+    var navRow = document.createElement("div");
+    navRow.className = "nav-row";
+
+    var back = document.createElement("button");
+    back.className = "back-link";
+    back.textContent = "\u2190 Back";
+    back.setAttribute("aria-label", "Go back to previous question");
+    back.addEventListener("click", goBack);
+    navRow.appendChild(back);
+
+    var restart2 = document.createElement("button");
+    restart2.className = "restart-link";
+    restart2.textContent = "Start over";
+    restart2.setAttribute("aria-label", "Start over from the beginning");
+    restart2.addEventListener("click", goRestart);
+    navRow.appendChild(restart2);
+
+    card.appendChild(navRow);
+  }
+
+  function goBack(){
+    if (path.length === 0) return;
+    var last = path.pop();
+    current = last.nodeKey;
+    render();
+  }
+
+  function goRestart(){
+    path = [];
+    current = "start";
+    render();
+  }
+
+  render();
+})();
+</script>
+
+</body>
+</html>
